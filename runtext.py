@@ -1,10 +1,35 @@
 #!/usr/bin/env python
-# Display a runtext with double-buffering.
 from samplebase import SampleBase
 from rgbmatrix import graphics
 import time
+import sys
+import spotipy
+import spotipy.util as util
 
 
+# Set the scope for just the currently playing song
+scope = 'user-read-currently-playing'
+
+# Prepare to capture the token for the user
+if len(sys.argv) > 1:
+    username = sys.argv[1]
+else:
+    print "Usage: %s username" % (sys.argv[0],)
+    sys.exit()
+
+token = util.prompt_for_user_token(username, scope)
+
+if token:
+    sp = spotipy.Spotify(auth=token)
+    results = sp.current_user_saved_tracks()
+    for item in results['items']:
+        track = item['track']
+        print track['name'] + ' - ' + track['artists'][0]['name']
+else:
+    print "Can't get token for", username
+
+
+## Commence the text display
 class RunText(SampleBase):
     def __init__(self, *args, **kwargs):
         super(RunText, self).__init__(*args, **kwargs)
