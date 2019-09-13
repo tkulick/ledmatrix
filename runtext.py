@@ -2,10 +2,15 @@
 from samplebase import SampleBase
 from rgbmatrix import graphics
 import time
+import os
 import sys
 import spotipy
 import spotipy.util as util
 
+# Read in the Spotipy client values
+client_id = str(os.getenv('SPOTIPY_CLIENT_ID'))
+client_secret = str(os.getenv('SPOTIPY_CLIENT_SECRET'))
+redirect_uri = str(os.getenv('SPOTIPY_REDIRECT_URI'))
 
 # Set the scope for just the currently playing song
 scope = 'user-read-currently-playing'
@@ -17,7 +22,7 @@ else:
     print "Usage: %s username" % (sys.argv[0],)
     sys.exit()
 
-token = util.prompt_for_user_token(username, scope)
+token = util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
 
 if token:
     sp = spotipy.Spotify(auth=token)
