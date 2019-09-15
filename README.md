@@ -6,3 +6,6 @@ https://github.com/hzeller/rpi-rgb-led-matrix/tree/master/bindings/python
 
 ## Spotipy
 https://spotipy.readthedocs.io/en/latest/
+
+## DarkSky Python Wrapper
+https://github.com/ZeevG/python-forecast.io
