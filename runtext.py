@@ -1,17 +1,40 @@
 #!/usr/bin/env python
+
+# Import LED items
 from samplebase import SampleBase
 from rgbmatrix import graphics
+
+# Import system items
 import time
 import json
 import os
 import sys
+
+# Import Spotipy items
 import spotipy
 import spotipy.util as util
+
+# Bring in the Dark Sky Python wrapper
+import forecastio
 
 # Read in the Spotipy client values
 client_id = str(os.getenv('SPOTIPY_CLIENT_ID'))
 client_secret = str(os.getenv('SPOTIPY_CLIENT_SECRET'))
 redirect_uri = str(os.getenv('SPOTIPY_REDIRECT_URI'))
+
+# Read in Dark Sky API key and set location
+api_key = str(os.getenv('DARKSKY'))
+lat = 40.1608
+lng = -74.8821
+
+# Get the forecast
+forecast = forecastio.load_forecast(api_key, lat, lng)
+weather_sum = forecast.hourly()
+for temp in weather_sum.data:
+	if(!temperature):
+		temperature = temp.temperature	
+print weather_sum.summary 
+print temperature
 
 # Set the scope for just the currently playing song
 scope = 'user-read-currently-playing'
@@ -30,9 +53,13 @@ token = util.prompt_for_user_token(username, scope, client_id, client_secret, re
 if token:
     sp = spotipy.Spotify(auth=token)
     result = sp.currently_playing()
-    track = result['item']
-    now_playing = track['artists'][0]['name'] + ' - ' + track['name']
-    print now_playing
+
+    if result:
+	track = result['item']
+    	now_playing = track['artists'][0]['name'] + ' - ' + track['name']
+    
+    else:
+	now_playing = "Nothing playing"
 
 else:
     print "Can't get token for", username
